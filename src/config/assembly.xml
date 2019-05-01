@@ -1,0 +1,55 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <id>release</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!--生成压缩文件-->
+    <fileSets>
+        <!--生成config文件夹-->
+        <fileSet>
+            <directory>src/config/${build.env}/config</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*.xml</include>
+                <include>*.properties</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/config</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+        </fileSet>
+        <!--生成bin文件夹-->
+        <fileSet>
+            <directory>target/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>stop.sh</include>
+                <include>start.sh</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/config/${build.env}</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>start.json</include>
+            </includes>
+        </fileSet>
+
+        <!--生成lib文件夹-->
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>apps</outputDirectory>
+            <includes>
+                <include>${artifactId}.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

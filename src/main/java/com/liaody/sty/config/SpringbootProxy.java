@@ -11,18 +11,18 @@ import java.util.Map;
 
 @Configuration
 public class SpringbootProxy {
-    @Bean
-    public Servlet baiduProxyServlet(){
-        return new ProxyServlet();
-    }
+//    @Bean
+//    public Servlet baiduProxyServlet(){
+//        return new ProxyServlet();
+//    }
 
-    @Bean
-    public ServletRegistrationBean proxyServletRegistration(){
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean(baiduProxyServlet(), "/*");
-        Map<String, String> params = ImmutableMap.of(
-                "targetUri", "http://www.what21.com",
-                "log", "true");
-        registrationBean.setInitParameters(params);
-        return registrationBean;
-    }
+//    @Bean
+//    public ServletRegistrationBean proxyServletRegistration(){
+//        ServletRegistrationBean registrationBean = new ServletRegistrationBean(baiduProxyServlet(), "/*");
+//        Map<String, String> params = ImmutableMap.of(
+//                "targetUri", "http://www.what21.com",
+//                "log", "true");
+//        registrationBean.setInitParameters(params);
+//        return registrationBean;
+//    }
 }

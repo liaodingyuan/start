@@ -1,5 +1,6 @@
 package com.liaody.sty.kafka;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.PartitionInfo;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 /**
  * kafka生产者.
@@ -100,7 +101,7 @@ public class StyKafkaProducer {
         }
         System.out.println("send message over.");
         // 如果在结束produce时，没有调用close()方法，那么这些资源会发生泄露。
-        kafkaProducer.close(100, TimeUnit.MILLISECONDS);
+       // kafkaProducer.close(100, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -114,8 +115,9 @@ public class StyKafkaProducer {
     public void sendMsgSyn(String topic, String partition, String key, String value) {
         ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
         try {
-
-            kafkaProducer.send(record);
+            Future<RecordMetadata> send = kafkaProducer.send(record);
+            RecordMetadata recordMetadata = send.get();
+            log.info("发送消息成功->{}", JSON.toJSONString(recordMetadata));
         } catch (Exception e) {
             log.info("同步发送消息失败->{}", e);
         }
@@ -133,4 +135,21 @@ public class StyKafkaProducer {
 
     }
 
+    /**
+     * 发送消息回调
+     */
+    private class StyProducerCallback implements Callback{
+        @Override
+        public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+            // 发送异常
+            if(e!=null){
+                log.error("回调失败->{}",e);
+                // 可以写入文件或者私信队列或者数据库
+            }
+            // 发送成功
+            else{
+                log.info("回调->{}",JSON.toJSONString(recordMetadata));
+            }
+        }
+    }
 }

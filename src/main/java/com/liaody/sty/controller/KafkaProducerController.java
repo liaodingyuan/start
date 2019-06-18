@@ -1,5 +1,8 @@
 package com.liaody.sty.controller;
 
+import com.liaody.sty.constants.ResultCode;
+import com.liaody.sty.constants.ResultMessage;
+import com.liaody.sty.kafka.StyKafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resources;
-
 /**
  * kafka生产者控制器
  */
@@ -23,6 +24,8 @@ public class KafkaProducerController {
     protected final Logger logger = LoggerFactory.getLogger(KafkaProducerController.class);
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private StyKafkaProducer producer;
 
     @RequestMapping(value = "/send", method = RequestMethod.GET)
     public String sendKafka(@RequestParam("message") String message) {
@@ -42,6 +45,11 @@ public class KafkaProducerController {
     public void sendKafka2(@RequestParam("message") String message) {
             ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send("my-topic", "key", message);
             future.addCallback(o -> System.out.println("send-消息发送成功：" + message), throwable -> System.out.println("消息发送失败：" + message));
+    }
 
+    @RequestMapping(value = "/send3", method = RequestMethod.POST)
+    public ResultMessage sendKafkaMsg(@RequestParam("message") String message){
+         producer.send("topic",null,"key1",message);
+        return ResultCode.SUCCESS.withMessage("处理成功");
     }
 }

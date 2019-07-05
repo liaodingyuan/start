@@ -86,6 +86,8 @@ public class StyKafkaProducer {
             // 发送失败，有异常消息
             if (e != null) {
                 e.printStackTrace();
+                // 手动重发
+                send(topic, null,key, value);
             }
             // 发送成功，返回RecordMetaData
             else {
@@ -136,7 +138,7 @@ public class StyKafkaProducer {
     }
 
     /**
-     * 发送消息回调
+     * 发送消息回调，实现回调接口
      */
     private class StyProducerCallback implements Callback{
         @Override

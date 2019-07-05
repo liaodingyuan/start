@@ -12,6 +12,6 @@ public class StartController {
     @GetMapping("/echo")
     @ApiOperation(value = "测试服务是否启动成功", notes = "测试")
     public String echo() {
-        return "Sty Server Stsrt Success!";
+        return "Sty Server Start Success!";
     }
 }

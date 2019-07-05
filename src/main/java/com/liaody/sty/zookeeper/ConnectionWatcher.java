@@ -23,12 +23,20 @@ public class ConnectionWatcher implements Watcher {
      * 使用计数器避免客户端还没有连接上zk server就已经被使用。
      */
     private CountDownLatch countDownLatch = new CountDownLatch(1);
-    protected ZooKeeper zk = null;
+    ZooKeeper zk = null;
 
+    /**
+     * 当zk客户端完成初始化的时候会有通知
+     * @param watchedEvent 监听事件
+     */
     @Override
     public void process(WatchedEvent watchedEvent) {
         if(watchedEvent.getState() == Event.KeeperState.SyncConnected){
+            log.info("connection to zk success");
             countDownLatch.countDown();
+        }
+        if(watchedEvent.getState() == Event.KeeperState.Disconnected){
+            log.info("lost connection");
         }
     }
 
